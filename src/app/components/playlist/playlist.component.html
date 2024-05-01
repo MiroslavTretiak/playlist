@@ -1,0 +1,29 @@
+<div class="card mt-4">
+    <div class="card-header">Songs list</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nr.</th>
+                    <th>Author</th>
+                    <th>Song name</th>
+                    <th>Genre</th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let song of songs; let i=index">
+                    <td>{{i + 1}}</td>
+                    <td>{{song.author}}</td>
+                    <td>{{song.songName}}</td>
+                    <td>{{song.genre}}</td>
+                    <td class="text-center">
+                        <a class="btn btn-success">Edit</a>
+                        &nbsp;&nbsp;
+                        <a class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
