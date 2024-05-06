@@ -18,9 +18,9 @@
                     <td>{{song.songName}}</td>
                     <td>{{song.genre}}</td>
                     <td class="text-center">
-                        <a class="btn btn-success">Edit</a>
+                        <a class="btn btn-success" [routerLink]="['/edit', song.id]">Edit</a>
                         &nbsp;&nbsp;
-                        <a class="btn btn-danger">Delete</a>
+                        <button class="btn btn-danger" (click)="deleteRecord(song.id)">Delete</button>
                     </td>
                 </tr>
             </tbody>

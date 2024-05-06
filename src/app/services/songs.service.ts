@@ -12,16 +12,24 @@ export class SongsService {
 
   constructor(private http:HttpClient) { }
 
-  private addToDB(item:Song) {
-    this.http.post("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json",item).subscribe(()=>{});
-  }
-
   public addSong(item:Song){
     this.songs.push(item);
-    this.addToDB(item);
+    return this.http.post("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json",item);
   }
 
   public loadData(){
   return this.http.get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json");
+  }
+
+  public loadRecord (id:String) {
+    return this.http.get<Song>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs/"+id+".json")
+  }
+
+  public editRecord (item:Song) {
+    return this.http.patch("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs/"+item.id+".json", item);
+  }
+
+  public deleteRecord(id:string) {
+    return this.http.delete("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs/"+id+".json")
   }
 }

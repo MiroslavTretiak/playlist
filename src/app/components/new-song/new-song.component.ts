@@ -26,8 +26,13 @@ export class NewSongComponent {
     this.songsService.addSong({
       author:this.author,
       songName:this.songName,
-      genre:this.genre
-    })
+      genre:this.genre,
+      id:null,
+    }).subscribe(()=>{
+      this.author=null;
+      this.songName=null;
+      this.genre=null;
+    });
   }
   }
 }
