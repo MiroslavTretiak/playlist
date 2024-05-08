@@ -3,11 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SongsService } from '../../services/songs.service';
 import { FormsModule } from '@angular/forms';
 import { Song } from '../../models/song';
+import { LoadingComponent } from '../loading/loading.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-edit-song',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, LoadingComponent, CommonModule],
   templateUrl: './edit-song.component.html',
   styleUrl: './edit-song.component.css'
 })
@@ -17,6 +19,7 @@ export class EditSongComponent {
   public songName:string|null=null;
   public author:string|null=null;
   public genre:string|null=null;
+  public isLoading=false;
 
   constructor(private route:ActivatedRoute, private songsService:SongsService, private router:Router) {
   this.id=this.route.snapshot.params['id'];
@@ -36,7 +39,9 @@ export class EditSongComponent {
       songName:this.songName,
       genre:this.genre,
     }
+    this.isLoading=true;
     this.songsService.editRecord(record).subscribe(()=>{
+      this.isLoading=false;
       this.router.navigate(['playlist']);
     });
   }

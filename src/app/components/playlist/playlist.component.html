@@ -1,7 +1,10 @@
 <div class="card mt-4">
+    <app-loading *ngIf="isLoading"></app-loading>
+
     <div class="card-header">Songs list</div>
     <div class="card-body">
-        <table class="table">
+        <div class=" alert alert-danger" *ngIf="isError">Error occurred</div>
+        <table class="table" *ngIf="!isLoading && !isError">
             <thead>
                 <tr>
                     <th>Nr.</th>

@@ -3,18 +3,22 @@ import { SongsService } from '../../services/songs.service';
 import { Song } from '../../models/song';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LoadingComponent } from '../loading/loading.component';
 
 
 @Component({
   selector: 'app-playlist',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, LoadingComponent],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.css'
 })
 export class PlaylistComponent {
 
   public songs:Song[]=[];
+
+  public isLoading=false;
+  public isError=false;
 
   public constructor(private songsService:SongsService) {
     //this.songs=songsService.songs;
@@ -25,19 +29,26 @@ export class PlaylistComponent {
   private loadData(){
       let x = this.songsService.loadData();
 
-    this.songsService.loadData().subscribe((data)=>{
-      this.songs=[];
-      for (let x in data) {
-        this.songs.push({...data[x], id:x })
-      }
-     console.log(this.songs)
+    this.isLoading=true;
+     this.isError=false;
+    x.subscribe({
+    next:(data)=>{
+      this.songs=data;
+      this.isLoading=false;
+      this.isError=false;
+    },
+    error:(error)=>{
+      this.isError=true;
+      this.isLoading=false;
+    }
     });
   }
 
   public deleteRecord(id:string|null) {
     if (id!=null) {
+    this.isLoading=true;
     this.songsService.deleteRecord(id).subscribe(()=>{
-      this.loadData();
+      this.loadData();     
     });
   }
   }

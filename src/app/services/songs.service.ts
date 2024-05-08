@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Song } from '../models/song';
 import { HttpClient } from '@angular/common/http';
-
+import { delay, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,20 @@ export class SongsService {
   }
 
   public loadData(){
-  return this.http.get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json");
+  return this.http
+  .get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json")
+  .pipe( 
+      map( (data):Song[]=>{
+        let songs=[];
+          for (let x in data) {
+            songs.push({...data[x], id:x })
+      }
+        this.songs=songs;
+          return songs;
+  }))
+    .pipe(
+      delay(1000)
+      )
   }
 
   public loadRecord (id:String) {
