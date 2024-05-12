@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Song } from '../models/song';
 import { HttpClient } from '@angular/common/http';
 import { delay, map, tap } from 'rxjs';
@@ -10,11 +10,15 @@ export class SongsService {
 
   public songs:Song[]=[];
 
+  public onSongsCountChange= new EventEmitter(); 
+
   constructor(private http:HttpClient) { }
 
   public addSong(item:Song){
     this.songs.push(item);
-    return this.http.post("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json",item);
+    return this.http.post("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json",item).pipe(
+      tap(()=>this.onSongsCountChange.emit())
+    );
   }
 
   public loadData(){
@@ -29,9 +33,6 @@ export class SongsService {
         this.songs=songs;
           return songs;
   }))
-    .pipe(
-      delay(1000)
-      )
   }
 
   public loadRecord (id:String) {
@@ -43,6 +44,8 @@ export class SongsService {
   }
 
   public deleteRecord(id:string) {
-    return this.http.delete("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs/"+id+".json")
+    return this.http.delete("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs/"+id+".json").pipe(
+      tap(()=>this.onSongsCountChange.emit())
+    );
   }
 }

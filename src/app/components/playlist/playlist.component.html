@@ -3,7 +3,7 @@
 
     <div class="card-header">Songs list</div>
     <div class="card-body">
-        <div class=" alert alert-danger" *ngIf="isError">Error occurred</div>
+        <app-error *ngIf="isError" [message]="'Error: failed to load data'" (close)="closeError()"></app-error>
         <table class="table" *ngIf="!isLoading && !isError">
             <thead>
                 <tr>
