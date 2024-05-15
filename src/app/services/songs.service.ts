@@ -1,7 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Song } from '../models/song';
 import { HttpClient } from '@angular/common/http';
-import { delay, map, tap } from 'rxjs';
+import { catchError, delay, map, tap } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,9 @@ export class SongsService {
   public songs:Song[]=[];
 
   public onSongsCountChange= new EventEmitter(); 
+  public onStatusChange = new EventEmitter<Number>();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private authService:AuthService) { }
 
   public addSong(item:Song){
     this.songs.push(item);
@@ -23,7 +25,7 @@ export class SongsService {
 
   public loadData(){
   return this.http
-  .get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json")
+  .get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json?auth="+this.authService.auth?.idToken)
   .pipe( 
       map( (data):Song[]=>{
         let songs=[];
@@ -31,8 +33,15 @@ export class SongsService {
             songs.push({...data[x], id:x })
       }
         this.songs=songs;
+        this.onStatusChange.emit(0);
           return songs;
   }))
+    .pipe(
+      catchError( (er,c)=>{ 
+        this.onStatusChange.emit(1);
+      throw "Error";
+    })
+    )
   }
 
   public loadRecord (id:String) {

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LoadingComponent } from '../loading/loading.component';
 import { ErrorComponent } from '../error/error.component';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -21,10 +22,10 @@ export class PlaylistComponent {
   public isLoading=false;
   public isError=false;
 
-  public constructor(private songsService:SongsService) {
+  public constructor(private songsService:SongsService, private authService:AuthService) {
     //this.songs=songsService.songs;
     this.loadData();
-  
+    this.authService.register("admin","admin", false);
   }
 
   private loadData(){
