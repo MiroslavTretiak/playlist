@@ -25,13 +25,25 @@ export class AuthService {
     }).pipe(tap( (response)=>{
       this.auth=response;
       this.isLoggedin=true;
+      localStorage.setItem("user", JSON.stringify(this.auth));
       this.onUserStatusChange.emit(true);
     }));
+  }
+
+  public autoLogin() {
+    let user=localStorage.getItem("user");
+    if(user!=null){
+      this.auth=JSON.parse(user)
+      this.isLoggedin=true;
+      this.onUserStatusChange.emit(true);
+      
+    }
   }
 
   public logout(){
     this.isLoggedin=false;
     this.auth=null;
+    localStorage.removeItem("user");
     this.onUserStatusChange.emit(false);
     this.router.navigate(['/']);
   }

@@ -25,7 +25,7 @@ export class SongsService {
 
   public loadData(){
   return this.http
-  .get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json?auth="+this.authService.auth?.idToken)
+  .get<{[key:string]:Song}>("https://playlist-858f6-default-rtdb.europe-west1.firebasedatabase.app/songs.json")
   .pipe( 
       map( (data):Song[]=>{
         let songs=[];
